@@ -6,7 +6,7 @@
 #    By: tpicchio <tpicchio@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/07 11:59:21 by tpicchio          #+#    #+#              #
-#    Updated: 2024/02/07 14:18:03 by tpicchio         ###   ########.fr        #
+#    Updated: 2024/02/20 11:49:49 by tpicchio         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,9 +14,15 @@ NAME = philo
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -pthread
 
-SRCS = main.c \
+SRCS =	main.c \
+		setup.c \
+		philosopher.c \
+		utils.c \
+		philo_life.c \
+		supervisor.c	\
+
 
 OBJS = $(SRCS:.c=.o)
 
@@ -31,7 +37,7 @@ $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-		@if ls *.o 1> /dev/null; then \
+		@if ls *.o > /dev/null 2>&1; then \
 			rm -f $(OBJS); \
 			echo; \
 			echo "${BOLD}${YELLOW}Cleaned object files${NO_COLOR}"; \

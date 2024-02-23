@@ -6,7 +6,7 @@
 /*   By: tpicchio <tpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 11:54:56 by tpicchio          #+#    #+#             */
-/*   Updated: 2024/02/13 10:11:26 by tpicchio         ###   ########.fr       */
+/*   Updated: 2024/02/20 12:00:45 by tpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,6 @@
 # include <stdlib.h>
 # include <sys/time.h>
 # include <unistd.h>
-
-typedef struct s_monitor
-{
-	int				perished;
-	pthread_mutex_t	perish_lock;
-	pthread_mutex_t	print_lock;
-	pthread_mutex_t	snack_lock;
-	t_philo			*philo;
-}	t_monitor;
 
 typedef struct s_philo
 {
@@ -50,5 +41,38 @@ typedef struct s_philo
 }	t_philo;
 
 
+typedef struct s_monitor
+{
+	int				perished;
+	pthread_mutex_t	perish_lock;
+	pthread_mutex_t	print_lock;
+	pthread_mutex_t	snack_lock;
+	t_philo			*philo;
+}	t_monitor;
+
+// philo_life.c
+void	ft_snack(t_philo *philo);
+void	ft_nap(t_philo *philo);
+void	ft_think_about_life(t_philo *philo);
+
+// philosopher.c
+int		ft_create_philos(t_monitor *monitor);
+int		ft_is_alive(t_philo *philo);
+
+// setup.c
+void	ft_setup_monitor(t_monitor *monitor, t_philo *philo);
+void	ft_setup_forks(pthread_mutex_t *forks, int n);
+void	ft_setup_philo(t_philo *philo, t_monitor *monitor,
+			pthread_mutex_t *forks, char **av);
+
+// supervisor.c
+void	*ft_supervisor(void *p);
+void	ft_print(t_philo *philo, int id, char *msg);
+
+// utils.c
+int		ft_my_usleep(size_t time);
+size_t	ft_get_time(void);
+int		ft_atoi(const char *str);
+void	ft_free_all(t_monitor *monitor, pthread_mutex_t *forks, t_philo *philo);
 
 #endif
