@@ -6,7 +6,7 @@
 /*   By: tpicchio <tpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 11:54:56 by tpicchio          #+#    #+#             */
-/*   Updated: 2024/02/20 12:00:45 by tpicchio         ###   ########.fr       */
+/*   Updated: 2024/03/20 12:39:09 by tpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ typedef struct s_philo
 	pthread_mutex_t	*perish_lock;
 }	t_philo;
 
-
 typedef struct s_monitor
 {
 	int				perished;
@@ -53,7 +52,7 @@ typedef struct s_monitor
 // philo_life.c
 void	ft_snack(t_philo *philo);
 void	ft_nap(t_philo *philo);
-void	ft_think_about_life(t_philo *philo);
+void	*ft_think_about_life(void *p);
 
 // philosopher.c
 int		ft_create_philos(t_monitor *monitor);

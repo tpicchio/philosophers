@@ -6,7 +6,7 @@
 /*   By: tpicchio <tpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 15:11:16 by tpicchio          #+#    #+#             */
-/*   Updated: 2024/02/20 15:37:16 by tpicchio         ###   ########.fr       */
+/*   Updated: 2024/03/20 12:39:01 by tpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,21 +24,19 @@ int	ft_is_alive(t_philo *philo)
 	return (0);
 }
 
-static void	*ft_philo_sad_life(void *p)
-{
-	t_philo	*philo;
+// static void	*ft_philo_sad_life(void *p)
+// {
+// 	t_philo	*philo;
 
-	philo = (t_philo *)p;
-	if (philo->id % 2 == 0)
-		ft_my_usleep(1);
-	while (!ft_is_alive(philo))
-	{
-		ft_snack(philo);
-		ft_nap(philo);
-		ft_think_about_life(philo);
-	}
-	return (p);
-}
+// 	philo = (t_philo *)p;
+// 	while (!ft_is_alive(philo))
+// 	{
+// 		ft_snack(philo);
+// 		ft_nap(philo);
+// 		ft_think_about_life(philo);
+// 	}
+// 	return (p);
+// }
 
 int	ft_create_philos(t_monitor *monitor)
 {
@@ -48,8 +46,8 @@ int	ft_create_philos(t_monitor *monitor)
 	i = 0;
 	while (i < monitor->philo[0].tot_philo)
 	{
-		if (pthread_create(&monitor->philo[i].thread, NULL, &ft_philo_sad_life,
-				&monitor->philo[i]) != 0)
+		if (pthread_create(&monitor->philo[i].thread, NULL,
+				&ft_think_about_life, &monitor->philo[i]) != 0)
 			return (write(2, "Error: failed to create a thread\n", 33));
 		i++;
 	}

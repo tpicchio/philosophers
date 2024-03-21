@@ -6,7 +6,7 @@
 /*   By: tpicchio <tpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 16:16:45 by tpicchio          #+#    #+#             */
-/*   Updated: 2024/02/20 14:30:50 by tpicchio         ###   ########.fr       */
+/*   Updated: 2024/03/20 12:52:32 by tpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	ft_print(t_philo *philo, int id, char *msg)
 	pthread_mutex_lock(philo->print_lock);
 	time = ft_get_time() - philo->birth_time;
 	if (!ft_is_alive(philo))
-		printf("%zu %d %s\n", time, id, msg);
+		printf("\033[1;%dm%zu %d %s\033[0m\n",(id % 16) + 31, time, id, msg);
 	pthread_mutex_unlock(philo->print_lock);
 }
 
@@ -85,11 +85,12 @@ static int	ft_check_all_satisfied(t_philo *philo)
 
 void	*ft_supervisor(void *p)
 {
-	t_philo	*philo;
-
-	philo = (t_philo *)p;
 	while (1)
-		if (ft_death_check(philo) || ft_check_all_satisfied(philo) == 1)
+	{
+		usleep(1);
+		if (ft_death_check((t_philo *)p)
+			|| ft_check_all_satisfied((t_philo *)p))
 			break ;
+	}
 	return (p);
 }

@@ -6,7 +6,7 @@
 #    By: tpicchio <tpicchio@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/07 11:59:21 by tpicchio          #+#    #+#              #
-#    Updated: 2024/02/20 11:49:49 by tpicchio         ###   ########.fr        #
+#    Updated: 2024/03/20 12:10:04 by tpicchio         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,7 @@ OBJS = $(SRCS:.c=.o)
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
+	$(CC) -g $(CFLAGS) -o $(NAME) $(OBJS)
 	echo
 	echo "${BOLD}Created  -> ${RED}$(NAME)${NO_COLOR}"
 

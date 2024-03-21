@@ -6,7 +6,7 @@
 /*   By: tpicchio <tpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:36:53 by tpicchio          #+#    #+#             */
-/*   Updated: 2024/02/20 10:17:58 by tpicchio         ###   ########.fr       */
+/*   Updated: 2024/03/21 10:22:35 by tpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,25 @@ static void	ft_set_input(t_philo *philo, char **av)
 		philo->max_snacks = -1;
 }
 
+static void	ft_set_forks(t_philo *philo, pthread_mutex_t *forks, int i)
+{
+	if (i == philo[0].tot_philo - 1)
+	{
+		philo[i].right_fork = &forks[i];
+		philo[i].left_fork = &forks[i - 1];
+	}
+	else if (i == 0)
+	{
+		philo[i].right_fork = &forks[philo[i].tot_philo - 1];
+		philo[i].left_fork = &forks[i];
+	}
+	else
+	{
+		philo[i].left_fork = &forks[i];
+		philo[i].right_fork = &forks[i - 1];
+	}
+}
+
 void	ft_setup_philo(t_philo *philo, t_monitor *monitor,
 		pthread_mutex_t *forks, char **av)
 {
@@ -62,12 +81,8 @@ void	ft_setup_philo(t_philo *philo, t_monitor *monitor,
 		philo[i].snack_lock = &monitor->snack_lock;
 		philo[i].perish_lock = &monitor->perish_lock;
 		philo[i].perished = &monitor->perished;
-		philo[i].left_fork = &forks[i];
 		ft_set_input(&philo[i], av);
-		if (i == 0)
-			philo[i].right_fork = &forks[philo[i].tot_philo - 1];
-		else
-			philo[i].right_fork = &forks[i - 1];
+		ft_set_forks(philo, forks, i);
 		i++;
 	}
 }
