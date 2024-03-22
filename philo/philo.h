@@ -6,7 +6,7 @@
 /*   By: tpicchio <tpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 11:54:56 by tpicchio          #+#    #+#             */
-/*   Updated: 2024/03/20 12:39:09 by tpicchio         ###   ########.fr       */
+/*   Updated: 2024/03/22 09:54:18 by tpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,16 +59,20 @@ int		ft_create_philos(t_monitor *monitor);
 int		ft_is_alive(t_philo *philo);
 
 // setup.c
-void	ft_setup_monitor(t_monitor *monitor, t_philo *philo);
-void	ft_setup_forks(pthread_mutex_t *forks, int n);
+void	ft_setup_mutexes(t_monitor *monitor, t_philo *philo,
+			pthread_mutex_t *forks, int n);
 void	ft_setup_philo(t_philo *philo, t_monitor *monitor,
 			pthread_mutex_t *forks, char **av);
 
 // supervisor.c
 void	*ft_supervisor(void *p);
-void	ft_print(t_philo *philo, int id, char *msg);
+
+// parsing.c
+int		ft_check_args(int ac, char **av);
+int		ft_check_num(char *str);
 
 // utils.c
+void	ft_print(t_philo *philo, int id, char *msg);
 int		ft_my_usleep(size_t time);
 size_t	ft_get_time(void);
 int		ft_atoi(const char *str);

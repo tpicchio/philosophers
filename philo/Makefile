@@ -6,7 +6,7 @@
 #    By: tpicchio <tpicchio@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/07 11:59:21 by tpicchio          #+#    #+#              #
-#    Updated: 2024/03/20 12:10:04 by tpicchio         ###   ########.fr        #
+#    Updated: 2024/03/22 10:36:31 by tpicchio         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,25 +22,32 @@ SRCS =	main.c \
 		utils.c \
 		philo_life.c \
 		supervisor.c	\
+		parsing.c	\
 
 
-OBJS = $(SRCS:.c=.o)
+OBJS = $(patsubst %.c,.build/%.o,$(SRCS))
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) -g $(CFLAGS) -o $(NAME) $(OBJS)
-	echo
-	echo "${BOLD}Created  -> ${RED}$(NAME)${NO_COLOR}"
+	@$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
+	@echo
+	@echo "${BOLD}Created  -> ${RED}$(NAME)${NO_COLOR}"
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+.build/%.o: %.c | .build
+	@$(CC) $(CFLAGS) -c $< -o $@
+
+.build:
+	@mkdir -p $@ 
 
 clean:
-		@if ls *.o > /dev/null 2>&1; then \
-			rm -f $(OBJS); \
+		@if [ -d .build ]; then \
+			rm -rf .build; \
 			echo; \
 			echo "${BOLD}${YELLOW}Cleaned object files${NO_COLOR}"; \
+		elif [ -e $(NAME) ] || [ ! -d .build ]; then \
+			echo; \
+			echo "${BOLD}${GREEN}Nothing to be done for clean${NO_COLOR}"; \
 		fi
 
 fclean: clean
@@ -48,12 +55,15 @@ fclean: clean
 			rm -f $(NAME); \
 			echo; \
 			echo "${BOLD}${YELLOW}Removed -> ${RED}${NAME}${NO_COLOR}"; \
+		else \
+			echo; \
+			echo "${BOLD}${GREEN}Nothing to be done for fclean${NO_COLOR}"; \
 		fi
 re: fclean all
 
 .PHONY: all clean fclean re
 
-.SILENT:
+.SILENT: clean fclean re
 
 
 NO_COLOR		=	\033[0m

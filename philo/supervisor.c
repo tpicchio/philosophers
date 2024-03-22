@@ -6,22 +6,11 @@
 /*   By: tpicchio <tpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 16:16:45 by tpicchio          #+#    #+#             */
-/*   Updated: 2024/03/20 12:52:32 by tpicchio         ###   ########.fr       */
+/*   Updated: 2024/03/21 11:55:52 by tpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-void	ft_print(t_philo *philo, int id, char *msg)
-{
-	size_t	time;
-
-	pthread_mutex_lock(philo->print_lock);
-	time = ft_get_time() - philo->birth_time;
-	if (!ft_is_alive(philo))
-		printf("\033[1;%dm%zu %d %s\033[0m\n",(id % 16) + 31, time, id, msg);
-	pthread_mutex_unlock(philo->print_lock);
-}
 
 static int	ft_is_dead(t_philo *philo, size_t perish_time)
 {
@@ -56,6 +45,20 @@ static int	ft_death_check(t_philo *philo)
 	return (0);
 }
 
+static void	ft_set_all_dead(t_philo *philo)
+{
+	int	i;
+
+	i = 0;
+	while (i < philo[0].tot_philo)
+	{
+		pthread_mutex_lock(philo[i].perish_lock);
+		*philo[i].perished = 1;
+		pthread_mutex_unlock(philo[i].perish_lock);
+		i++;
+	}
+}
+
 static int	ft_check_all_satisfied(t_philo *philo)
 {
 	int	i;
@@ -75,9 +78,7 @@ static int	ft_check_all_satisfied(t_philo *philo)
 	}
 	if (satisfied == philo[0].tot_philo)
 	{
-		pthread_mutex_lock(philo[0].perish_lock);
-		*philo->perished = 1;
-		pthread_mutex_unlock(philo[0].perish_lock);
+		ft_set_all_dead(philo);
 		return (1);
 	}
 	return (0);

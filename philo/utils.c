@@ -6,11 +6,22 @@
 /*   By: tpicchio <tpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 10:39:25 by tpicchio          #+#    #+#             */
-/*   Updated: 2024/03/20 12:39:24 by tpicchio         ###   ########.fr       */
+/*   Updated: 2024/03/21 11:36:33 by tpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+void	ft_print(t_philo *philo, int id, char *msg)
+{
+	size_t	time;
+
+	pthread_mutex_lock(philo->print_lock);
+	time = ft_get_time() - philo->birth_time;
+	if (!ft_is_alive(philo))
+		printf("\033[1;%dm%zu %d %s\033[0m\n", (id % 16) + 31, time, id, msg);
+	pthread_mutex_unlock(philo->print_lock);
+}
 
 int	ft_my_usleep(size_t time)
 {
