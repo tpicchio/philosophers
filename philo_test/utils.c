@@ -25,23 +25,18 @@ int	ft_print(t_philo *philo, int id, char *msg)
 		pthread_mutex_unlock(philo->stat_mutex);
 		return (0);
 	}
-	else if (*(philo->status) == -1)
+	else if (*(philo->status) == -1 || philo->tot_meal == 0)
 	{
 		pthread_mutex_unlock(philo->stat_mutex);
 		return (0);
 	}
+	printf("%zu %d %s\n", time, id, msg);
 	if (msg[3] == 'e')
 	{
 		philo->tot_meal--;
 		if (philo->tot_meal == 0)
-			*(philo->status) = *philo->status + 1;
-		if (*(philo->status) == philo->tot_philo)
-		{
-			pthread_mutex_unlock(philo->stat_mutex);
-			return (0);
-		}
+			return (pthread_mutex_unlock(philo->stat_mutex), 0);
 	}
-	printf("%zu %d %s\n", time, id, msg);
 	pthread_mutex_unlock(philo->stat_mutex);
 	return (1);
 }
@@ -94,6 +89,9 @@ void	ft_free_all(pthread_mutex_t *forks, t_philo *philo)
 		pthread_mutex_destroy(&forks[i]);
 		i++;
 	}
+	free(philo[0].status);
+	pthread_mutex_destroy(philo[0].stat_mutex);
+	free(philo[0].stat_mutex);
 	free(philo);
 	free(forks);
 }

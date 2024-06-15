@@ -25,13 +25,15 @@ void	*ft_think_about_life(void *p)
 		pthread_mutex_unlock(philo->right_fork);
 		return (p);
 	}
-	if (ft_is_alive(philo))
-		return (p);
-	else
-	{
-		ft_print(philo, philo->id, "is thinking");
-		ft_snack(philo);
-	}
+	// if (ft_is_alive(philo))
+	// 	return (p);
+	// else
+	// {
+	// 	ft_print(philo, philo->id, "is thinking");
+	// 	ft_snack(philo);
+	// }
+	ft_print(philo, philo->id, "is thinking");
+	ft_snack(philo);
 	return (p);
 }
 
@@ -39,10 +41,24 @@ void	ft_snack(t_philo *philo)
 {
 	if (ft_is_alive(philo))
 		return ;
-	pthread_mutex_lock(philo->right_fork);
-	ft_print(philo, philo->id, "has taken a fork");
-	pthread_mutex_lock(philo->left_fork);
-	ft_print(philo, philo->id, "has taken a fork");
+	// pthread_mutex_lock(philo->right_fork);
+	// ft_print(philo, philo->id, "has taken a fork");
+	// pthread_mutex_lock(philo->left_fork);
+	// ft_print(philo, philo->id, "has taken a fork");
+	if (philo->id % 2 == 0)
+	{
+		pthread_mutex_lock(philo->right_fork);
+		ft_print(philo, philo->id, "has taken a fork");
+		pthread_mutex_lock(philo->left_fork);
+		ft_print(philo, philo->id, "has taken a fork");
+	}
+	else
+	{
+		pthread_mutex_lock(philo->left_fork);
+		ft_print(philo, philo->id, "has taken a fork");
+		pthread_mutex_lock(philo->right_fork);
+		ft_print(philo, philo->id, "has taken a fork");
+	}
 	pthread_mutex_lock(philo->snack_lock);
 	philo->snacking = 1;
 	ft_print(philo, philo->id, "is eating");
@@ -58,8 +74,8 @@ void	ft_snack(t_philo *philo)
 
 void	ft_nap(t_philo *philo)
 {
-	if (ft_is_alive(philo))
-		return ;
+	// if (ft_is_alive(philo))
+	// 	return ;
 	ft_print(philo, philo->id, "is sleeping");
 	ft_my_usleep(philo->nap_time);
 	ft_think_about_life(philo);

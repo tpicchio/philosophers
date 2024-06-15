@@ -6,24 +6,53 @@
 /*   By: tpicchio <tpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 10:39:25 by tpicchio          #+#    #+#             */
-/*   Updated: 2024/03/21 11:36:33 by tpicchio         ###   ########.fr       */
+/*   Updated: 2024/06/14 15:44:11 by tpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	ft_print(t_philo *philo, int id, char *msg)
+int	ft_print(t_philo *philo, int id, char *msg)
 {
-	size_t	time;
+	static int		sts = 0;
+	size_t			time;
 
-	pthread_mutex_lock(philo->print_lock);
-	time = ft_get_time() - philo->birth_time;
-	if (!ft_is_alive(philo))
-		printf("%zu %d %s\n", time, id, msg);
-	pthread_mutex_unlock(philo->print_lock);
+	pthread_mutex_lock(philo->print_mtx);
+	time = ft_get_time();
+	if ((time - philo->last_meal) > philo->time_to_die && sts != -1)
+	{
+		sts = -1;
+		printf("%zu %d %s\n", time - philo->start, id, "died");
+		pthread_mutex_unlock(philo->print_mtx);
+		return (0);
+	}
+	else if (sts == -1 || sts == philo->tot_philo)
+	{
+		pthread_mutex_unlock(philo->print_mtx);
+		return (0);
+	}
+	printf("%zu %d %s\n", time - philo->start, id, msg);
+	if (msg[3] == 'e')
+	{
+		philo->last_meal = time;
+		philo->tot_meal--;
+		if (philo->tot_meal == 0 && sts != -1)
+			sts++;
+	}
+	// if (msg[3] == 't' && (time - philo->start) > philo->time_to_eat)
+	// {
+	// 	if (philo->time_to_die - (time - philo->last_meal) > 100)
+	// 	{
+	// 		wait = (philo->time_to_die - (time - philo->last_meal)) * 0.1;
+	// 		ft_usleep(wait);
+	// 		// printf("ID: %d Waited %d\n", id, wait);
+	// 	}
+	// }
+	pthread_mutex_unlock(philo->print_mtx);
+	return (1);
 }
 
-int	ft_my_usleep(size_t time)
+int	ft_usleep(size_t time)
 {
 	size_t	start;
 
@@ -59,21 +88,20 @@ int	ft_atoi(const char *str)
 	return (nb);
 }
 
-void	ft_free_all(t_monitor *monitor, pthread_mutex_t *forks, t_philo *philo)
+void	ft_free_all(pthread_mutex_t *forks, t_philo *philo)
 {
 	int	i;
 	int	tot;
 
 	i = 0;
-	tot = monitor->philo[0].tot_philo;
-	pthread_mutex_destroy(&monitor->snack_lock);
-	pthread_mutex_destroy(&monitor->print_lock);
-	pthread_mutex_destroy(&monitor->perish_lock);
+	tot = philo[0].tot_philo;
 	while (i < tot)
 	{
 		pthread_mutex_destroy(&forks[i]);
 		i++;
 	}
+	pthread_mutex_destroy(philo[0].print_mtx);
+	free(philo[0].print_mtx);
 	free(philo);
 	free(forks);
 }

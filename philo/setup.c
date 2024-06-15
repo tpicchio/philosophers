@@ -42,24 +42,24 @@ static void	ft_set_input(t_philo *philo, char **av)
 		philo->max_snacks = -1;
 }
 
-static void	ft_set_forks(t_philo *philo, pthread_mutex_t *forks, int i)
-{
-	if (i == 0)
-	{
-		philo[i].right_fork = &forks[philo[i].tot_philo - 1];
-		philo[i].left_fork = &forks[i];
-	}
-	else if (i == philo[0].tot_philo - 1)
-	{
-		philo[i].right_fork = &forks[i];
-		philo[i].left_fork = &forks[i - 1];
-	}
-	else
-	{
-		philo[i].left_fork = &forks[i];
-		philo[i].right_fork = &forks[i - 1];
-	}
-}
+// static void	ft_set_forks(t_philo *philo, pthread_mutex_t *forks, int i)
+// {
+// 	if (i == 0)
+// 	{
+// 		philo[i].right_fork = &forks[philo[i].tot_philo - 1];
+// 		philo[i].left_fork = &forks[i];
+// 	}
+// 	else if (i == philo[0].tot_philo - 1)
+// 	{
+// 		philo[i].right_fork = &forks[i];
+// 		philo[i].left_fork = &forks[i - 1];
+// 	}
+// 	else
+// 	{
+// 		philo[i].left_fork = &forks[i];
+// 		philo[i].right_fork = &forks[i - 1];
+// 	}
+// }
 
 void	ft_setup_philo(t_philo *philo, t_monitor *monitor,
 		pthread_mutex_t *forks, char **av)
@@ -81,7 +81,8 @@ void	ft_setup_philo(t_philo *philo, t_monitor *monitor,
 		philo[i].last_snack = ft_get_time();
 		philo[i].birth_time = ft_get_time();
 		ft_set_input(&philo[i], av);
-		ft_set_forks(philo, forks, i);
+		philo[i].left_fork = &forks[i];
+		philo[i].right_fork = &forks[(i + 1) % tot_philo];
 		i++;
 	}
 }

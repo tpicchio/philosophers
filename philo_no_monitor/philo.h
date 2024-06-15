@@ -26,7 +26,6 @@ typedef struct s_philo
 	int				id;
 	int				tot_philo;
 	int				tot_meal;
-	int				*status;
 	size_t			last_meal;
 	size_t			time_to_die;
 	size_t			time_to_eat;
@@ -35,7 +34,7 @@ typedef struct s_philo
 	pthread_t		thread;
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	*right_fork;
-	pthread_mutex_t	*stat_mutex;
+	pthread_mutex_t	*print_mtx;
 }				t_philo;
 
 // main.c
@@ -47,7 +46,7 @@ int		ft_check_num(char *str);
 
 // init_data.c
 int		ft_init_philo(t_philo *philo, pthread_mutex_t *forks,
-			pthread_mutex_t *stat_mutex, char **av);
+			pthread_mutex_t *print_mtx, char **av);
 int		ft_init_mutex(pthread_mutex_t **forks, pthread_mutex_t **stat_mut,
 			char **av);
 

@@ -56,29 +56,25 @@ static void	set_philo_data(t_philo *philo, pthread_mutex_t *forks,
 	philo[i].time_to_eat = atoi_val[2];
 	philo[i].time_to_sleep = atoi_val[3];
 	philo[i].tot_meal = atoi_val[4];
-	philo[i].last_meal = ft_get_time();
-	philo[i].start = ft_get_time();
 	philo[i].left_fork = &forks[i];
 	philo[i].right_fork = &forks[(i + 1) % atoi_val[0]];
 }
 
 int	ft_init_philo(t_philo *philo, pthread_mutex_t *forks,
-		pthread_mutex_t *stat_mutex, char **av)
+		pthread_mutex_t *print_mtx, char **av)
 {
-	int	i;
-	int	tot_philo;
-	int	*status;
+	int		i;
+	int		tot_philo;
+	size_t	start;
 
-	status = malloc(sizeof(int));
-	if (!status)
-		return (write(2, "Malloc error\n", 13), -1);
-	*status = 0;
 	tot_philo = ft_atoi(av[1]);
+	start = ft_get_time();
 	i = 0;
 	while (i < tot_philo)
 	{
-		philo[i].status = status;
-		philo[i].stat_mutex = stat_mutex;
+		philo[i].print_mtx = print_mtx;
+		philo[i].last_meal = start;
+		philo[i].start = start;
 		set_philo_data(philo, forks, av, i);
 		if (pthread_create(&philo[i].thread, NULL, philo_life, &philo[i]) != 0)
 			return (write(2, "Thread creation error\n", 23), -1);

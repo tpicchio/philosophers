@@ -30,14 +30,15 @@ void	*philo_life(void *arg)
 	{
 		if (ft_print(philo, philo->id, "is thinking") == 0)
 			return (NULL);
-		if ((ft_get_time() - philo->last_meal) > philo->time_to_die)
-			return (ft_print(philo, philo->id, "died"), NULL);
+		// if ((ft_get_time() - philo->last_meal) > philo->time_to_die)
+		// 	return (ft_print(philo, philo->id, "died"), NULL);
 		if (philo->id % 2 == 0)
 			lock_forks(philo, philo->right_fork, philo->left_fork);
 		else
 			lock_forks(philo, philo->left_fork, philo->right_fork);
-		ft_print(philo, philo->id, "is eating");
-		philo->last_meal = ft_get_time();
+		// philo->last_meal = ft_get_time();
+		if (ft_print(philo, philo->id, "is eating") == 0)
+			return (pthread_mutex_unlock(philo->right_fork), pthread_mutex_unlock(philo->left_fork), NULL);
 		ft_usleep(philo->time_to_eat);
 		pthread_mutex_unlock(philo->right_fork);
 		pthread_mutex_unlock(philo->left_fork);
@@ -54,17 +55,24 @@ int	main(int ac, char **av)
 	int				tot_philo;
 	t_philo			*philo;
 	pthread_mutex_t	*forks;
-	pthread_mutex_t	*stat_mutex;
+	pthread_mutex_t	*print_mtx;
 
 	if (ft_check_args(ac, av))
 		return (1);
+	if (ft_atoi(av[1]) == 1)
+	{
+		printf("0 1 has taken a fork\n");
+		ft_usleep(ft_atoi(av[2]));
+		printf("%d 1 died\n", ft_atoi(av[2]));
+		return (0);
+	}
 	philo = malloc(sizeof(t_philo) * ft_atoi(av[1]));
 	if (!philo)
 		return (write(2, "Malloc error\n", 13), 2);
 	forks = NULL;
-	stat_mutex = NULL;
-	ft_init_mutex(&forks, &stat_mutex, av);
-	if (ft_init_philo(philo, forks, stat_mutex, av) == -1)
+	print_mtx = NULL;
+	ft_init_mutex(&forks, &print_mtx, av);
+	if (ft_init_philo(philo, forks, print_mtx, av) == -1)
 		return (ft_free_all(forks, philo), 3);
 	i = -1;
 	tot_philo = ft_atoi(av[1]);

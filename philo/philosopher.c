@@ -22,8 +22,8 @@ int	ft_create_philos(t_monitor *monitor)
 	tot_philo = monitor->philo[0].tot_philo;
 	while (i < tot_philo)
 	{
-		if (i % 2 == 0)
-			ft_my_usleep(1);
+		// if (i % 2 == 0)
+		// 	ft_my_usleep(1);
 		if (pthread_create(&monitor->philo[i].thread, NULL,
 				&ft_think_about_life, &monitor->philo[i]) != 0)
 			return (write(2, "Error: failed to create a thread\n", 33), -1);
