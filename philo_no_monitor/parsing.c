@@ -36,6 +36,8 @@ int	ft_check_args(int ac, char **av)
 		return (write(2, "Invalid number of arguments\n", 28));
 	if (ft_check_num(av[1]))
 		return (write(2, "Invalid number of philosophers\n", 31));
+	if (ft_atoi(av[1]) > 200)
+		return (write(2, "Too many philosophers\n", 23));
 	if (ft_check_num(av[2]))
 		return (write(2, "Invalid time to die\n", 20));
 	if (ft_check_num(av[3]))

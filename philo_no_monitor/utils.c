@@ -27,10 +27,7 @@ int	ft_print(t_philo *philo, int id, char *msg)
 		return (0);
 	}
 	else if (sts == -1 || sts == philo->tot_philo)
-	{
-		pthread_mutex_unlock(philo->print_mtx);
-		return (0);
-	}
+		return (pthread_mutex_unlock(philo->print_mtx), 0);
 	printf("%zu %d %s\n", time - philo->start, id, msg);
 	if (msg[3] == 'e')
 	{
@@ -39,15 +36,6 @@ int	ft_print(t_philo *philo, int id, char *msg)
 		if (philo->tot_meal == 0 && sts != -1)
 			sts++;
 	}
-	// if (msg[3] == 't' && (time - philo->start) > philo->time_to_eat)
-	// {
-	// 	if (philo->time_to_die - (time - philo->last_meal) > 100)
-	// 	{
-	// 		wait = (philo->time_to_die - (time - philo->last_meal)) * 0.1;
-	// 		ft_usleep(wait);
-	// 		// printf("ID: %d Waited %d\n", id, wait);
-	// 	}
-	// }
 	pthread_mutex_unlock(philo->print_mtx);
 	return (1);
 }
