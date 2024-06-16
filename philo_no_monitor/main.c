@@ -28,6 +28,12 @@ static void	lock_forks(t_philo *philo, pthread_mutex_t *forks1,
 	ft_print(philo, philo->id, "has taken a fork");
 }
 
+static void	ft_unlock_forks(t_philo *philo)
+{
+	pthread_mutex_unlock(philo->right_fork);
+	pthread_mutex_unlock(philo->left_fork);
+}
+
 void	*philo_life(void *arg)
 {
 	t_philo	*philo;
@@ -37,19 +43,18 @@ void	*philo_life(void *arg)
 	{
 		if (ft_print(philo, philo->id, "is thinking") == 0)
 			return (NULL);
-		if (philo->id % 2 == 0)
+		if ((ft_get_time() - philo->start) > philo->time_to_eat
+			&& philo->tot_philo % 2 != 0)
+			ft_usleep(5);
+		if ((philo->id == philo->tot_philo && philo->tot_philo != 2)
+			|| philo->id == 1)
 			lock_forks(philo, philo->right_fork, philo->left_fork);
 		else
 			lock_forks(philo, philo->left_fork, philo->right_fork);
 		if (ft_print(philo, philo->id, "is eating") == 0)
-		{
-			pthread_mutex_unlock(philo->right_fork);
-			pthread_mutex_unlock(philo->left_fork);
-			return (NULL);
-		}
+			return (ft_unlock_forks(philo), NULL);
 		ft_usleep(philo->time_to_eat);
-		pthread_mutex_unlock(philo->right_fork);
-		pthread_mutex_unlock(philo->left_fork);
+		ft_unlock_forks(philo);
 		if (ft_print(philo, philo->id, "is sleeping") == 0)
 			return (NULL);
 		ft_usleep(philo->time_to_sleep);
