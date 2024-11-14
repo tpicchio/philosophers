@@ -1,15 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: tpicchio <tpicchio@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/02/07 11:59:21 by tpicchio          #+#    #+#              #
-#    Updated: 2024/03/22 10:36:31 by tpicchio         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 NAME = philo
 
 CC = cc
@@ -17,11 +5,8 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror -pthread
 
 SRCS =	main.c \
-		setup.c \
-		philosopher.c \
+		init_data.c \
 		utils.c \
-		philo_life.c \
-		supervisor.c	\
 		parsing.c	\
 
 
@@ -47,7 +32,7 @@ clean:
 			echo "${BOLD}${YELLOW}Cleaned object files${NO_COLOR}"; \
 		elif [ -e $(NAME) ] || [ ! -d .build ]; then \
 			echo; \
-			echo "${BOLD}${GREEN}Nothing to be done for clean${NO_COLOR}"; \
+			echo "${BOLD}${BLUE}Nothing to be done for clean${NO_COLOR}"; \
 		fi
 
 fclean: clean

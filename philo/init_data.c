@@ -6,7 +6,7 @@
 /*   By: tpicchio <tpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/14 16:23:59 by tpicchio          #+#    #+#             */
-/*   Updated: 2024/06/14 16:40:47 by tpicchio         ###   ########.fr       */
+/*   Updated: 2024/06/17 10:30:12 by tpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static void	set_atoi_val(int *atoi_val, char **av)
 static void	set_philo_data(t_philo *philo, pthread_mutex_t *forks,
 		char **av, int i)
 {
-	int	atoi_val[4];
+	int	atoi_val[5];
 
 	set_atoi_val(atoi_val, av);
 	philo[i].id = i + 1;
@@ -57,7 +57,10 @@ static void	set_philo_data(t_philo *philo, pthread_mutex_t *forks,
 	philo[i].time_to_sleep = atoi_val[3];
 	philo[i].tot_meal = atoi_val[4];
 	philo[i].left_fork = &forks[i];
-	philo[i].right_fork = &forks[(i + 1) % atoi_val[0]];
+	if (atoi_val[0] == 1)
+		philo[i].right_fork = NULL;
+	else
+		philo[i].right_fork = &forks[(i + 1) % atoi_val[0]];
 }
 
 int	ft_init_philo(t_philo *philo, pthread_mutex_t *forks,

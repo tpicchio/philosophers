@@ -5,77 +5,56 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tpicchio <tpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/07 11:54:56 by tpicchio          #+#    #+#             */
-/*   Updated: 2024/03/22 09:54:18 by tpicchio         ###   ########.fr       */
+/*   Created: 2024/06/14 09:53:42 by tpicchio          #+#    #+#             */
+/*   Updated: 2024/11/14 10:50:38 by tpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
 
-# include <pthread.h>
 # include <stdio.h>
 # include <stdlib.h>
-# include <sys/time.h>
+# include <pthread.h>
 # include <unistd.h>
+# include <sys/time.h>
+# include <stdbool.h>
 
 typedef struct s_philo
 {
 	int				id;
-	pthread_t		thread;
-	int				snacking;
-	int				snacks_eaten;
-	size_t			last_snack;
-	size_t			perish_time;
-	size_t			snack_time;
-	size_t			nap_time;
-	size_t			birth_time;
 	int				tot_philo;
-	int				max_snacks;
-	int				*perished;
+	int				tot_meal;
+	size_t			last_meal;
+	size_t			time_to_die;
+	size_t			time_to_eat;
+	size_t			time_to_sleep;
+	size_t			start;
+	pthread_t		thread;
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	*right_fork;
-	pthread_mutex_t	*print_lock;
-	pthread_mutex_t	*snack_lock;
-	pthread_mutex_t	*perish_lock;
-}	t_philo;
+	pthread_mutex_t	*print_mtx;
+}				t_philo;
 
-typedef struct s_monitor
-{
-	int				perished;
-	pthread_mutex_t	perish_lock;
-	pthread_mutex_t	print_lock;
-	pthread_mutex_t	snack_lock;
-	t_philo			*philo;
-}	t_monitor;
-
-// philo_life.c
-void	ft_snack(t_philo *philo);
-void	ft_nap(t_philo *philo);
-void	*ft_think_about_life(void *p);
-
-// philosopher.c
-int		ft_create_philos(t_monitor *monitor);
-int		ft_is_alive(t_philo *philo);
-
-// setup.c
-void	ft_setup_mutexes(t_monitor *monitor, t_philo *philo,
-			pthread_mutex_t *forks, int n);
-void	ft_setup_philo(t_philo *philo, t_monitor *monitor,
-			pthread_mutex_t *forks, char **av);
-
-// supervisor.c
-void	*ft_supervisor(void *p);
+// main.c
+void	*philo_life(void *arg);
+int		ft_usleep(size_t time);
 
 // parsing.c
 int		ft_check_args(int ac, char **av);
 int		ft_check_num(char *str);
+int		ft_atoi(const char *str);
+void	ft_putnbr(long int num);
+
+// init_data.c
+int		ft_init_philo(t_philo *philo, pthread_mutex_t *forks,
+			pthread_mutex_t *print_mtx, char **av);
+int		ft_init_mutex(pthread_mutex_t **forks, pthread_mutex_t **stat_mut,
+			char **av);
 
 // utils.c
-void	ft_print(t_philo *philo, int id, char *msg);
-int		ft_my_usleep(size_t time);
+int		check_and_print(t_philo *philo, int id, char *msg);
 size_t	ft_get_time(void);
-int		ft_atoi(const char *str);
-void	ft_free_all(t_monitor *monitor, pthread_mutex_t *forks, t_philo *philo);
+void	ft_free_all(pthread_mutex_t *forks, t_philo *philo);
 
 #endif

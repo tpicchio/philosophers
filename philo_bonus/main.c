@@ -6,7 +6,7 @@
 /*   By: tpicchio <tpicchio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 18:00:22 by tpicchio          #+#    #+#             */
-/*   Updated: 2024/11/13 18:00:26 by tpicchio         ###   ########.fr       */
+/*   Updated: 2024/11/14 11:17:02 by tpicchio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,11 @@ void	philo_life(t_philo philo)
 		check_and_print(philo, "is thinking", 0);
 		sem_wait(philo.forks);
 		check_and_print(philo, "has taken a fork", 1);
+		if (philo.tot_philo == 1)
+		{
+			ft_usleep(philo.time_to_die + 1);
+			check_and_print(philo, "if you see this, something went wrong", 1);
+		}
 		sem_wait(philo.forks);
 		time = ft_get_time();
 		philo.last_meal = time;
